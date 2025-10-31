@@ -4,15 +4,16 @@ Go through this template in preparation for your meeting with the course staff m
 
 ## Project Ideas
 What are some ideas for your project? Why does that interest you?
+* Taking the updated stars rating program from homework 5 and turning it into a web based app
 
 ## What are the big ideas?
-How does this address some of the big learning ideas of 5001?
+* Practice with using user input, functions, coding defensively, loops (possibly both for and while), dictionaries, global/local variables. There are others but I feel these are going to be the bulk of my project.
 
 ## Code Design Thoughts
-Are you including classes or APIs, what about dictionaries? One of the worst things you can do is go into a project assuming you are going to 'hard' code everything (this happens often with text based games, then students get stuck). You don't have to know details yet, but you should think about separation of concerns, and how to divide up your code. 
+* I'm considering classes and dictionaries for storing and updating information
 
 ## Resources Found
-What are some resources you have found already or already have access to? (APIs, libraries, past assignments, etc)
+* I haven't found any resources yet, but I am working through Flask tutorials via YouTube.
 
 ## Timeline
 Setup a general timeline that includes research and development, and when you want to have certain aspects of the project done. 

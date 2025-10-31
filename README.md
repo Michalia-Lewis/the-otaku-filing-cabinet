@@ -1,9 +1,9 @@
 # Final Project Report
 
-* Student Name:
-* Github Username:
-* Semester:
-* Course:
+* Student Name: Michalia Lewis
+* Github Username: Michalia-Lewis
+* Semester: Fall 2025
+* Course: CS 5001 Intensive Foundations of Computer Science
 
 
 

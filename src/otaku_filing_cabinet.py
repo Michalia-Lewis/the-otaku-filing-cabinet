@@ -42,10 +42,10 @@ def box(text, width=60):
 welcome_text = """
 🎌 WELCOME TO THE OTAKU FILING CABINET 🎌
 
-こんにちは! Welcome, anime enthusiast! 
+こんにちは! Welcome, anime enthusiast!
 
-Build your perfect anime list from our catalog
-of 40+ amazing anime, or add your own discoveries!
+Build your perfect anime list!
+40+ shows to browse, or add your own!
 
 🆕 First time? Type 'help' for a complete guide
 ⚡ Quick start: Type 'list catalog' to browse!

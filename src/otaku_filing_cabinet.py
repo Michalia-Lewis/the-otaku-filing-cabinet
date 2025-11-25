@@ -40,7 +40,7 @@ def box(text, width=60):
     return '\n'.join(boxed)
 
 welcome_text = """
-🎌 WELCOME TO THE OTAKU FILING CABINET 🎌
+🏮WELCOME TO THE OTAKU FILING CABINET🏮
 
 こんにちは! Welcome, anime enthusiast!
 
@@ -50,16 +50,17 @@ Build your perfect anime list!
 🆕 First time? Type 'help' for a complete guide
 ⚡ Quick start: Type 'list catalog' to browse!
 
-Let's build your anime collection together! 🌸
+✨Let's build your anime collection together!✨
 """.strip()
 
+
 goodbye_text = """
-🌸 SAYONARA! 🌸
+🎌SAYONARA!🎌
   
 Your anime collection has been saved!
 Thanks for using the Otaku Filing Cabinet!
 
-Until next time, happy watching! 🎌
+Until next time, happy watching!
 """.strip()
 
 # uses box function to put messages into a formatted box
@@ -74,8 +75,8 @@ Here's how to use the app:
 
 📚 BROWSING ANIME
   • list catalog     - Browse our legendary anime collection! ⚔️
-  • list mine        - Check out your personal watchlist! 📝✨
-  • list catalog action - Find all the shounen goodness! 💪
+  • list mine        - Check out your personal list! 📝✨
+  • list catalog action - Find all the Shounen goodness! 💪
   • list mine > 8    - See your top-tier anime (the ones that made you cry)
 
 ➕ ADDING SHOWS  

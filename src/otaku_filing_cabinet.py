@@ -228,7 +228,7 @@ def get_new_show_from_user() -> Tuple[str, int, str]:
             int_rating = int(user_rating)  # convert rating to int
             break
         except ValueError:
-            print("Rating must be a whole number.")  # if rating is negative or float re-prompt the user for a valid input
+            print("Rating must be a whole number.")  # if rating is string or float re-prompt the user for a valid input
             continue
     
     # get the genre from the user
@@ -243,7 +243,7 @@ def get_new_show_from_user() -> Tuple[str, int, str]:
 
     user_catalog = (cleaned_user_title, int_rating, cleaned_user_genre)  # create a tuple containing user's inputs
 
-    return user_catalog  # return the tuple
+    return user_catalog
 
 
 def clean_title(title: str) -> str:

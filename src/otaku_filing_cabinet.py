@@ -148,16 +148,16 @@ def load_shows(filename: str) -> Dict[str, Tuple[int, str]]:
         >>> load_shows("data/anime_ratings_short.dat")                    # doctest: +NORMALIZE_WHITESPACE
         {'Steins;Gate': (987, 'sci-fi'),
         'Naruto': (4, 'action'),
-        'Yuri on Ice': (13, 'sports'),
+        'Yuri On Ice': (13, 'sports'),
         'Chainsaw Man': (742, 'horror'),
         'Fruits Basket': (2, 'romance'),
-        'Kill la Kill': (88, 'action'),
-        'SHIKI': (1, 'horror'),
+        'Kill La Kill': (88, 'action'),
+        'Shiki': (1, 'horror'),
         'Black Clover': (305, 'fantasy'),
         'Your Name': (999, 'drama'),
         'Trigun': (7, 'western'),}
 
-    Arguments:
+    Args:
         filename (str): The name of the file to load the shows from.
 
     Returns:
@@ -198,6 +198,17 @@ def load_shows(filename: str) -> Dict[str, Tuple[int, str]]:
 def get_new_show_from_user() -> Tuple[str, int, str]:
     """
     Gets the user's input for show title, rating, and genre when they use the add command.
+    
+    Prompts the user for three pieces of information and validates each input,
+    re-prompting if invalid. Title is cleaned to title case and genre is converted
+    to lowercase.
+    
+    Args:
+        None
+    
+    Returns:
+        Tuple[str, int, str]: A tuple containing the cleaned title, rating as an integer,
+        and genre in lowercase.
     """
     # get the title from the user and call clean_title function
     while True:
@@ -207,25 +218,25 @@ def get_new_show_from_user() -> Tuple[str, int, str]:
         if cleaned_user_title != "":
             break
         else:
-            print("Title cannot be blank. Please enter a show title.")
+            print("Title cannot be blank. Please enter a show title.")  # if user doesn't enter a title re-prompt the user for a valid input
 
     # get the rating from the user
     while True:
-        user_rating = input("What do you rate this show? (1 through 10): ")
+        user_rating = input("What do you rate this show? ")
 
         try:
             int_rating = int(user_rating)  # convert rating to int
             break
         except ValueError:
-            print("Rating must be a whole number.")
+            print("Rating must be a whole number.")  # if rating is negative or float re-prompt the user for a valid input
             continue
     
     # get the genre from the user
     while True:
-        user_genre = input("What is the show's genre? (one word, e.g. action, fantasy, sports): ")
+        user_genre = input("What is the show's genre? (e.g. action, slice of life, sports, etc.): ")
         cleaned_user_genre = user_genre.lower().strip()
 
-        if cleaned_user_genre != "":
+        if cleaned_user_genre != "":  # if user doesn't enter a genre re-prompt the user for a valid input
             break
         else:
             print("Genre cannot be blank. Please enter a genre.")
@@ -241,22 +252,43 @@ def clean_title(title: str) -> str:
     and converts it to title case. 
 
     Examples:
-        >>> clean_title("     v")
-        'V'
+        # Standard cases
         >>> clean_title("death note  ")
         'Death Note'
         >>> clean_title("mob psycho 100")
         'Mob Psycho 100'
-        >>> clean_title(" STEINS;GATE  ")
-        'Steins;Gate'
-        >>> clean_title("      your lie in april        ")
-        'Your Lie In April'
-        >>> clean_title("")
-        ''
         >>> clean_title("attack on titan")
         'Attack On Titan'
+        
+        # Edge cases - extreme spacing
+        >>> clean_title("     v")
+        'V'
+        >>> clean_title("      your lie in april        ")
+        'Your Lie In April'
+        >>> clean_title("fruits    basket")
+        'Fruits Basket'
 
-    Arguments:
+        # Edge case - random/mixed casing
+        >>> clean_title("DeMoN sLaYeR")
+        'Demon Slayer'
+        >>> clean_title("ViOlEt EvErGaRdEn")
+        'Violet Evergarden'
+        >>> clean_title("cOdE gEaSs")
+        'Code Geass'
+        
+        # Edge case - all caps
+        >>> clean_title(" STEINS;GATE  ")
+        'Steins;Gate'
+        >>> clean_title("RE:ZERO")
+        'Re:Zero'
+        >>> clean_title("SPY X FAMILY")
+        'Spy X Family'
+        
+        # Edge case - empty string
+        >>> clean_title("")
+        ''
+
+    Args:
         title (str): show title to clean
     Returns:
         str : the show in title case, and leading and trailing spaces removed
@@ -266,33 +298,44 @@ def clean_title(title: str) -> str:
 
 
 def convert_rating(val: int, min_stars: int = __MIN_STARS, max_stars: int = __MAX_STARS) -> str:
-    """Converts int rating (1-10 scale) to stars (*) (1-5 scale). 
+    """Converts int rating (1-10 scale) to stars (⭐) (1-5 scale). 
     
         Scales the input rating to fit within the star range:
-        - Ratings 1-2 return '*' (1 star)
-        - Ratings 3-4 return '**' (2 stars)  
-        - Ratings 5-6 return '***' (3 stars)
-        - Ratings 7-8 return '****' (4 stars)
-        - Ratings 9-10 return '*****' (5 stars)
+        - Ratings 1-2 return '⭐' (1 star)
+        - Ratings 3-4 return '⭐⭐' (2 stars)  
+        - Ratings 5-6 return '⭐⭐⭐' (3 stars)
+        - Ratings 7-8 return '⭐⭐⭐⭐' (4 stars)
+        - Ratings 9-10 return '⭐⭐⭐⭐⭐' (5 stars)
         
-        Any value below 1 returns min_stars (*).
-        Any value above 10 returns max_stars (*****).
+        Any value below 1 returns min_stars (⭐).
+        Any value above 10 returns max_stars (⭐⭐⭐⭐⭐).
 
     Examples:
-        >>> convert_rating(0, 1, 5)
+        # Standard cases (normal ratings 1-10)
+        >>> convert_rating(2, 1, 5)
         '*'
         >>> convert_rating(3, 1, 5)
         '**'
+        >>> convert_rating(7, 1, 5)
+        '****'
+        
+        # Edge cases - below minimum
+        >>> convert_rating(0, 1, 5)
+        '*'
         >>> convert_rating(-100, 1, 5)
         '*'
+        >>> convert_rating(-5, 1, 5)
+        '*'
+        
+        # Edge cases - extreme high values
+        >>> convert_rating(1000, 1, 5)
+        '*****'
         >>> convert_rating(1234567890, 1, 5)
         '*****'
-        >>> convert_rating(2, 1, 5)
-        '*'
-        >>> convert_rating(4, 1, 5)
-        '**'
+        >>> convert_rating(9999999999999, 1, 5)
+        '*****'
 
-    Arguments:
+    Args:
         val (int): the rating value
         min_stars (int, optional): the minimum number of stars to return. Defaults to _MIN_STARS.
         max_stars (int, optional): the maximum number of stars to return. Defaults to _MAX_STARS.
@@ -311,7 +354,7 @@ def convert_rating(val: int, min_stars: int = __MIN_STARS, max_stars: int = __MA
     else:
         star_rating = 5
 
-    return "*" * star_rating
+    return "⭐" * star_rating
 
 
 def check_filter(show: Tuple[str, int, str], filter: str) -> bool:
@@ -367,7 +410,7 @@ def check_filter(show: Tuple[str, int, str], filter: str) -> bool:
         >>> check_filter(("Mob Psycho 100", 482, "comedy"), "com")
         False
 
-    Arguments:
+    Args:
         show (Tuple[str, int, str]): The show tuple
         filter (str): The filter to check
 
@@ -454,7 +497,7 @@ def print_shows(catalog: Dict[str, Tuple[int, str]], filter: str = '', spacer: i
         >>> print_shows(shows, "nothing")  # No matches
 
 
-    Arguments:
+    Args:
        shows (Dict[str, Tuple[int, str]]): Dictionary of shows with title as key and (rating, genre) as value
     """
     if filter != "":
@@ -464,11 +507,13 @@ def print_shows(catalog: Dict[str, Tuple[int, str]], filter: str = '', spacer: i
                     filtered_catalog[title] = (rating, genre)
     else:
         filtered_catalog = catalog
-    
-    for title, (rating, genre) in filtered_catalog.items():
-        stars = convert_rating(rating)
-        print(f"{stars:<{max_stars + spacer}}{title}")
 
+    # Extract title, rating, and genre from each dictionary entry
+    for title, (rating, genre) in filtered_catalog.items():
+        stars = convert_rating(rating)  # call convert_rating function and store in a variable
+        num_stars = stars.count("⭐")  # Count the actual number of stars
+        spaces_needed = (5 - num_stars) * 2  # Calculate spaces needed (5 max stars - current stars) * 2 for emoji width
+        print(f"{stars}{' ' * spaces_needed}  |  {title:^28}  |  {genre:^15}")  # prints the formatted string
 
 def update_rating(catalog: Dict[str, Tuple[int, str]], title: str) -> bool:
     """Updates the rating for an existing show in the dictionary.
@@ -476,7 +521,7 @@ def update_rating(catalog: Dict[str, Tuple[int, str]], title: str) -> bool:
     Displays the current rating, then prompts the user for a new rating
     while preserving the show's genre. Modifies the dictionary in place.
     
-    Arguments:
+    Args:
         shows (Dict[str, Tuple[int, str]]): Dictionary of shows to modify
         title (str): Title of the show to update
     
@@ -522,7 +567,7 @@ def save_shows(catalog: Dict[str, Tuple[int, str]], filename: str) -> None:
         # Attack on Titan::9::action
         # Your Lie in April::8::drama
 
-    Arguments:
+    Args:
         shows (Dict[str, Tuple[int, str]]): Dictionary of shows where keys are titles
             and values are tuples of (rating, genre)
         filename (str): The path/name of the file to write to. Will overwrite if exists.

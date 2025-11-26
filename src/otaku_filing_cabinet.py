@@ -55,7 +55,7 @@ Build your perfect anime list!
 
 
 goodbye_text = """
-🎌SAYONARA!🎌
+SAYONARA!👋
   
 Your anime collection has been saved!
 Thanks for using the Otaku Filing Cabinet!
@@ -146,16 +146,16 @@ def load_shows(filename: str) -> Dict[str, Tuple[int, str]]:
 
     Example:
         >>> load_shows("data/anime_ratings_short.dat")                    # doctest: +NORMALIZE_WHITESPACE
-        {'Steins;Gate': (987, 'sci-fi'),
-        'Naruto': (4, 'action'),
-        'Yuri On Ice': (13, 'sports'),
-        'Chainsaw Man': (742, 'horror'),
-        'Fruits Basket': (2, 'romance'),
-        'Kill La Kill': (88, 'action'),
-        'Shiki': (1, 'horror'),
-        'Black Clover': (305, 'fantasy'),
-        'Your Name': (999, 'drama'),
-        'Trigun': (7, 'western'),}
+        {"Steins;Gate": (2, "sci-fi"),
+        "Naruto": (456, "action"),
+        "Yuri On Ice": (7, "sports"),
+        "Chainsaw Man": (8888, "horror"),
+        "Fruits Basket": (5, "romance"),
+        "Kill La Kill": (1, "action"),
+        "Shiki": (1337, "horror"),
+        "Black Clover": (69, "fantasy"),
+        "Your Name": (3, "drama"),
+        "Trigun": (911, "western")}
 
     Args:
         filename (str): The name of the file to load the shows from.
@@ -168,27 +168,27 @@ def load_shows(filename: str) -> Dict[str, Tuple[int, str]]:
 
     user_file = open(filename)  # open the file
     read_user_file = user_file.read()  # read the file
-    show_list = read_user_file.split('\n')
+    show_list = read_user_file.split('\n')  # creates list where each line is an element
 
     for line in show_list:
-        line = line.strip()
-        if not line:
+        line = line.strip()  # strips the whitespace from the line
+        if not line:  # if line is empty it's skipped
             continue
-        clean_key = line.split('::')
-        if len(clean_key) != 3:
+        clean_key = line.split('::')  # splits line into [title, rating, genre]
+        if len(clean_key) != 3:  # if the list doesn't have 3 elements skip
             continue
-        title = clean_key[0].strip()
-        rating_str = clean_key[1].strip()
-        genre = clean_key[2].strip()
+        title = clean_key[0].strip()  # extract title
+        rating_str = clean_key[1].strip()  # extract rating (still a string)
+        genre = clean_key[2].strip()  # extract genre
 
         # checks for proper value for rating (must be an int)
         try:
             rating = int(rating_str)  # convert rating to int
         except ValueError:
-            print(f"Warning: invalid rating '{rating_str}' in line: {line}")
+            print(f"Warning: Skipping '{title}' - rating must be a number (found: '{rating_str}')")  # prints error message if rating is not an int
             continue
 
-        catalog[title] = (rating, genre)
+        catalog[title] = (rating, genre)  # stores show in dictionary with title as key
 
     user_file.close()  # close the file 
 
@@ -507,6 +507,14 @@ def print_shows(catalog: Dict[str, Tuple[int, str]], filter: str = '', spacer: i
                     filtered_catalog[title] = (rating, genre)
     else:
         filtered_catalog = catalog
+    
+    # Check if there are any shows to display
+    if not filtered_catalog:
+        if filter:
+            print(f"Gomen! No anime found matching '{filter}' 😭")
+        else:
+            print("Your list is empty! Start adding shows! 📝")
+        return
 
     # Extract title, rating, and genre from each dictionary entry
     for title, (rating, genre) in filtered_catalog.items():

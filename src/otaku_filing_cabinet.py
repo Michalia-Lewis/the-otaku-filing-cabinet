@@ -373,11 +373,15 @@ def check_filter(show: Tuple[str, int, str], filter: str) -> bool:
         True
         >>> check_filter(("Mob Psycho 100", 482, "comedy"), "> 400")
         True
+        >>> check_filter(("Naruto", 456, "action"), "action")
+        True
         
         # Edge cases - No matches
         >>> check_filter(("Steins;Gate", 100, "scifi"), "Naruto")
         False
         >>> check_filter(("Your Lie in April", 10, "drama"), "action")
+        False
+        >>> check_filter(("Beastars", 12, "drama"), "< 10")
         False
         
         # Edge case - Invalid operators/format
@@ -399,15 +403,25 @@ def check_filter(show: Tuple[str, int, str], filter: str) -> bool:
         # Edge case - Empty string
         >>> check_filter(("Fruits Basket", 774, "romance"), "")
         True
+        >>> check_filter(("Death Note", 10000, "psychological"), "")
+        True
+        >>> check_filter(("Naruto", 456, "action"), "")
+        True
         
         # Edge case - Case sensitivity
         >>> check_filter(("Death Parade", 643, "psychological"), "DEATH")
         True
         >>> check_filter(("Death Parade", 643, "psychological"), "PSYCHOLOGICAL")
         True
+        >>> check_filter(("Mob Psycho 100", 482, "comedy"), "mOb PsYcHo")
+        True
         
         # Edge case - Partial matches that shouldn't work
         >>> check_filter(("Mob Psycho 100", 482, "comedy"), "com")
+        False
+        >>> check_filter(("Steins;Gate", 100, "scifi"), "sci")
+        False
+        >>> check_filter(("Your Name", 999, "drama"), "dra")
         False
 
     Args:
@@ -426,9 +440,9 @@ def check_filter(show: Tuple[str, int, str], filter: str) -> bool:
     if filter.lower() == show[2].lower():  # filter by genre
         return True
     
-    parts_of_filter = filter.split()
+    parts_of_filter = filter.split()  # split filter into operator and value
 
-    if len(parts_of_filter) != 2:
+    if len(parts_of_filter) != 2:  # Operator and value required
         return False
     
     operator = parts_of_filter[0]
@@ -436,6 +450,7 @@ def check_filter(show: Tuple[str, int, str], filter: str) -> bool:
     if operator not in __FILTER_OPERATION_OPTIONS:
         return False
     
+    # Validate and convert rating value
     try:
         rating = int(parts_of_filter[1])
     except ValueError:
@@ -468,33 +483,53 @@ def print_shows(catalog: Dict[str, Tuple[int, str]], filter: str = '', spacer: i
     or rating comparison).
 
     Examples:
+        # Standard cases - no filter
         >>> shows = {"Attack on Titan": (9, "action"), "Your Lie in April": (8, "drama"), "Haikyu!!": (7, "sports")}
         >>> print_shows(shows)
-        *****  Attack on Titan
-        ****   Your Lie in April
-        ****   Haikyu!!
+        ⭐⭐⭐⭐⭐  Attack on Titan
+        ⭐⭐⭐⭐  Your Lie in April
+        ⭐⭐⭐⭐   Haikyu!!
+        >>> shows_small = {"One Piece": (10, "adventure"), "Naruto": (6, "action")}
+        >>> print_shows(shows_small)
+        ⭐⭐⭐⭐⭐  One Piece
+        ⭐⭐⭐    Naruto
+        >>> shows_single = {"Death Note": (10000, "psychological")}
+        >>> print_shows(shows_single)
+        ⭐⭐⭐⭐⭐  Death Note
         
+        # Filter by title
         >>> print_shows(shows, "Titan")
-        *****  Attack on Titan
+        ⭐⭐⭐⭐⭐  Attack on Titan
+        >>> print_shows(shows, "Your")
+        ⭐⭐⭐⭐   Your Lie in April
+        >>> print_shows(shows, "H")
+        ⭐⭐⭐⭐   Haikyu!!
         
+        # Filter by genre
         >>> print_shows(shows, "sports")
-        ****   Haikyu!!
+        ⭐⭐⭐⭐   Haikyu!!
+        >>> print_shows(shows, "action")
+        ⭐⭐⭐⭐⭐  Attack on Titan
+        >>> print_shows(shows, "drama")
+        ⭐⭐⭐⭐   Your Lie in April
         
+        # Filter by rating comparison
         >>> print_shows(shows, "> 7")
-        *****  Attack on Titan
-        ****   Your Lie in April
-        
+        ⭐⭐⭐⭐⭐  Attack on Titan
+        ⭐⭐⭐⭐   Your Lie in April
         >>> print_shows(shows, "= 8")
-        ****   Your Lie in April
+        ⭐⭐⭐⭐  Your Lie in April
+        >>> print_shows(shows, "< 9")
+        ⭐⭐⭐⭐   Your Lie in April
+        ⭐⭐⭐⭐   Haikyu!!
         
-        >>> shows_small = {"One Piece": (10, "adventure"), "Naruto": (6, "action"), "Bleach": (4, "action")}
-        >>> print_shows(shows_small, "action")
-        ***    Naruto
-        **     Bleach
-        
+        # Edge cases - empty/no matches
         >>> print_shows({})  # Empty dictionary
-        
+        Your list is empty! Start adding shows! 📝✨
         >>> print_shows(shows, "nothing")  # No matches
+        Gomen! No anime found matching 'nothing' 😔
+        >>> print_shows(shows, "> 100")  # No matches with rating filter
+        Gomen! No anime found matching '> 100' 😔
 
 
     Args:

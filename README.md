@@ -7,13 +7,45 @@
 
 ## Description
 
-General overview of the project, what you did, why you did it, etc.
+For my project I created The Otaku Filing Cabinet. This program allows users to browse a catalog of anime recommendations and build their own personal collection. Users can add shows, update ratings, filter by genre or rating, and save their list for later. As for the why: I am an avid anime fan and really enjoy being able to combine that love with programming. Furthermore, I took inspiration from the Star Rating App that we programmed for a homework assignment and wanted to expand on it with my own otaku-themed twist.
 
 ## Key Features
 
-Highlight some key features of this project that you want to show off/talk about/focus on.
+This program allows the user to search through a curated catalog of 50 anime shows, complete with ratings and genres. Users can filter shows by title, genre, or rating to find exactly what they're looking for. The user is able to create their own list using the catalog or by adding shows not in the catalog, as well as save their list. One of my favorite features is the auto save function in case the user forgets to save their list. The app also includes a fun otaku personality with Japanese expressions and emojis throughout!
 
 ## Guide
+
+After running the program, you'll be greeted with a welcome message. Type `help` to see all available commands.
+
+![Welcome Message](/screenshots/welcome_message.png)
+![Help Message](/screenshots/help_message.png)
+
+A typical session might look like:
+
+1. `list catalog` — browse the anime catalog
+   ![List Catalog](/screenshots/list_catalog_snippet.png)
+
+2. `list catalog action` — filter by genre
+    ![List Catalog Action](/screenshots/list_catalog_action.png)
+
+3. `add Death Note` — add a show from the catalog to your list
+    ![Add Death Note](/screenshots/add_death_note.png)
+
+4. `add` — add your own custom show
+    ![Add](/screenshots/add.png)
+
+5. `list mine` — view your personal list
+    ![List Mine](/screenshots/list_mine.png)
+
+6. `update Naruto` — change a rating
+    ![Update Rating](/screenshots/update_rating.png)
+
+7. `save mylist` — saves your collection in a file titled "mylist"
+    ![Save mylist](/screenshots/save_mylist.png)
+    ![mylist](/screenshots/mylist.png)
+
+8. `exit` — quit (auto-saves!)
+    ![Exit](/screenshots/exit.png)
 
 How do we run your project? What should we do to see it in action? - Note this isn't installing, this is actual use of the project.. If it is a website, you can point towards the gui, use screenshots, etc talking about features.
 

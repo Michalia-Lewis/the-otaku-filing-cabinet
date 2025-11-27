@@ -1,26 +1,51 @@
 import unittest
-import subprocess
-import re
+import io
 import sys
 import os
+from unittest.mock import patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 import otaku_filing_cabinet
 
-# lambda function to make feedback messages easier to read
-common_msg = lambda msg, expected, actual: f"{msg}\nExpected: {expected}\nActual: {actual}"
+# Test data for filter and print_shows tests
+TEST_CATALOG = [
+    ("Death Parade", 643, "psychological"),
+    ("Steins;Gate", 100, "scifi"),
+    ("Akira", 1000, "cyberpunk"),
+    ("Fruits Basket", 774, "romance"),
+    ("Mob Psycho 100", 482, "comedy"),
+    ("Naruto", 456, "action"),
+    ("Death Note", 999, "psychological"),
+    ("Your Name", 50, "drama"),
+]
 
-clean_spaces = lambda string: re.sub(r"\s+", "", string)
-
-def lines_to_set(string: str) -> set:
-    """Converts a string with newlines to a set of lines"""
-    return set([clean_spaces(line) for line in string.splitlines()])
-
+# Test data for print_shows tests (dict format)
+TEST_CATALOG_DICT = {
+    "Death Parade": (643, "psychological"),
+    "Steins;Gate": (100, "scifi"),
+    "Akira": (1000, "cyberpunk"),
+    "Fruits Basket": (774, "romance"),
+    "Mob Psycho 100": (482, "comedy"),
+    "Naruto": (456, "action"),
+    "Death Note": (999, "psychological"),
+    "Your Name": (50, "drama"),
+}
 
 class TestOtakuFilingCabinet(unittest.TestCase):
+    def test_box(self) -> None:
+        """Test the box function"""
+        boxed_text = otaku_filing_cabinet.box("Testing 123")
+        lines = boxed_text.split('\n')
+
+        # Check structure
+        self.assertEqual(len(lines), 3)  # top border + 1 line + bottom border
+        self.assertEqual(lines[0], "=" * 60)  # top border
+        self.assertEqual(lines[-1], "=" * 60)  # bottom border
+        self.assertIn("Testing 123", lines[1])  # content is there
+
     def test_load_shows(self) -> None:
         """Test the load_shows function with a smaller anime show file"""
-        show_catalog = otaku_filing_cabinet.load_shows("test_data/test_anime_ratings_short.dat")
+        show_catalog = otaku_filing_cabinet.load_shows("tests/test_data/test_anime_ratings_short.dat")
         self.assertEqual(
             show_catalog,
             {
@@ -36,7 +61,6 @@ class TestOtakuFilingCabinet(unittest.TestCase):
                 "Komi Can'T Communicate": (69, "slice of life")
             }
         )
-
 
     def test_load_shows_2(self) -> None:
         """Test the load_shows function with a larger anime show file"""
@@ -97,9 +121,168 @@ class TestOtakuFilingCabinet(unittest.TestCase):
             }
         )
 
+    def test_load_shows_empty_file(self) -> None:
+        """Test load_shows with an empty file"""
+        show_catalog = otaku_filing_cabinet.load_shows("tests/test_data/test_empty.dat")
+        self.assertEqual(show_catalog, {})
+    
+    def test_load_shows_invalid_rating(self) -> None:
+        """Test load_shows skips entries with non-numeric ratings"""
+        show_catalog = otaku_filing_cabinet.load_shows("tests/test_data/test_invalid_rating.dat")
+        self.assertNotIn("Bad Show", show_catalog)
+    
+    def test_clean_title(self) -> None:
+        """Test clean_title function"""
+        self.assertEqual(otaku_filing_cabinet.clean_title("death note  "), "Death Note")
+        self.assertEqual(otaku_filing_cabinet.clean_title("    your lie in april    "), "Your Lie In April")
+        self.assertEqual(otaku_filing_cabinet.clean_title("DeMoN sLaYeR"), "Demon Slayer")
+        self.assertEqual(otaku_filing_cabinet.clean_title("SPY X FAMILY"), "Spy X Family")
+        self.assertEqual(otaku_filing_cabinet.clean_title("STEINS;GATE"), "Steins;Gate")
+        self.assertEqual(otaku_filing_cabinet.clean_title(""), "")
+    
+    def test_convert_rating(self) -> None:
+        """Test convert_rating function"""
+        self.assertEqual(otaku_filing_cabinet.convert_rating(1), "⭐")
+        self.assertEqual(otaku_filing_cabinet.convert_rating(4), "⭐⭐")
+        self.assertEqual(otaku_filing_cabinet.convert_rating(5), "⭐⭐⭐")
+        self.assertEqual(otaku_filing_cabinet.convert_rating(8), "⭐⭐⭐⭐")
+        self.assertEqual(otaku_filing_cabinet.convert_rating(10), "⭐⭐⭐⭐⭐")
+        self.assertEqual(otaku_filing_cabinet.convert_rating(-10), "⭐")
+        self.assertEqual(otaku_filing_cabinet.convert_rating(1000000), "⭐⭐⭐⭐⭐")
+    
+    def test_check_filter_no_filter(self) -> None:
+        """Tests the check_filter function with no filter."""
+        for show in TEST_CATALOG:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, ""))
+    
+    def test_check_filter_show_title_filter(self) -> None:
+        """Tests the check_filter function with a show title filter."""
+        for show in [x for x in TEST_CATALOG if 'death' in x[0].lower()]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "death"))
+        for show in [x for x in TEST_CATALOG if 'fruit' in x[0].lower()]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "fruit"))
 
-    def test_get_new_show_from_user(self) -> None:
-        """Test to see if the get_new_show_from_user function is returning a tuple properly."""
-        user_catalog_tuple = otaku_filing_cabinet.get_new_show_from_user()
-        # self.assertEqal()
-        pass
+    def test_check_filter_show_rating_filter(self) -> None:
+        """Tests the check_filter function with a show rating filter."""
+        for show in [x for x in TEST_CATALOG if x[1] >= 500]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, ">= 500"))
+        for show in [x for x in TEST_CATALOG if x[1] < 500]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "< 500"))
+        for show in [x for x in TEST_CATALOG if x[1] == 999]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "= 999"))
+        for show in [x for x in TEST_CATALOG if x[1] != 643]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "!= 643"))
+        for show in [x for x in TEST_CATALOG if x[1] > 50]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "> 50"))
+        for show in [x for x in TEST_CATALOG if x[1] <= 100]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "<= 100"))
+
+    def test_check_filter_invalid_operator(self) -> None:
+        """Tests the check_filter function with invalid operators."""
+        self.assertFalse(otaku_filing_cabinet.check_filter(("Akira", 1000, "cyberpunk"), ">> 500"))
+        self.assertFalse(otaku_filing_cabinet.check_filter(("Naruto", 456, "action"), "<> 100"))
+    
+    def test_check_filter_genre(self) -> None:
+        """Tests the check_filter function with a genre filter."""
+        for show in [x for x in TEST_CATALOG if x[2] == "psychological"]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "psychological"))
+        for show in [x for x in TEST_CATALOG if x[2] == "romance"]:
+            self.assertTrue(otaku_filing_cabinet.check_filter(show, "romance"))
+
+    def test_check_filter_case_insensitive(self) -> None:
+        """Tests the check_filter function is case insensitive."""
+        self.assertTrue(otaku_filing_cabinet.check_filter(("Mob Psycho 100", 482, "comedy"), "mOb PsYcHo"))
+        self.assertTrue(otaku_filing_cabinet.check_filter(("Naruto", 456, "action"), "ACTION"))      
+    
+    def test_print_shows(self) -> None:
+        """Test print_shows function"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        
+        otaku_filing_cabinet.print_shows({"Naruto": (456, "action")})
+        
+        sys.stdout = sys.__stdout__
+        output = captured_output.getvalue()
+        
+        self.assertIn("Naruto", output)
+        self.assertIn("action", output)
+        self.assertIn("⭐", output)
+
+    def test_print_shows_empty_dict(self) -> None:
+        """Test print_shows with empty dictionary"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        
+        otaku_filing_cabinet.print_shows({})
+        
+        sys.stdout = sys.__stdout__
+        output = captured_output.getvalue()
+
+        self.assertIn("Zannen!", output)
+    
+    def test_print_shows_no_matches(self) -> None:
+        """Test print_shows with filter that matches nothing"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        
+        otaku_filing_cabinet.print_shows(TEST_CATALOG_DICT, "xyz")
+        
+        sys.stdout = sys.__stdout__
+        output = captured_output.getvalue()
+
+        self.assertIn("Gomen!", output)
+    
+    def test_print_shows_filter(self) -> None:
+        """Test print_shows with filter"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        
+        otaku_filing_cabinet.print_shows(TEST_CATALOG_DICT, "death")
+        
+        sys.stdout = sys.__stdout__
+        output = captured_output.getvalue()
+
+        self.assertIn("Death Parade", output)
+        self.assertIn("Death Note", output)
+        self.assertNotIn("Naruto", output)
+        self.assertNotIn("Akira", output)
+    
+    def test_update_rating_show_not_found(self) -> None:
+        """Test update_rating with show not in catalog"""
+        catalog = {"Naruto": (456, "action")}
+        result = otaku_filing_cabinet.update_rating(catalog, "Akira")
+        
+        self.assertFalse(result)
+
+    def test_update_rating_success(self) -> None:
+        """Test update_rating successfully updates rating"""
+        # Create a test catalog with one show
+        catalog = {"Naruto": (456, "action")}
+        
+        # Mock input() so it returns '999' instead of waiting for user
+        # This simulates the user typing '999' when prompted for new rating
+        with patch('builtins.input', return_value='999'):
+            # Call the function — it will use our fake input
+            result = otaku_filing_cabinet.update_rating(catalog, "Naruto")
+        
+        # Check that function returned True (success)
+        self.assertTrue(result)
+        
+        # Check that the catalog was actually updated
+        # Rating should be 999, genre should still be "action"
+        self.assertEqual(catalog["Naruto"], (999, "action"))
+    
+    def test_save_shows(self) -> None:
+        """Test save_shows writes correct format to file"""
+        otaku_filing_cabinet.save_shows(TEST_CATALOG_DICT, "test_save.dat")
+
+        file = open("anime_shows_list/test_save.dat", "r")
+        content = file.read()
+        file.close()
+        
+        self.assertIn("Death Parade::643::psychological", content)
+        self.assertIn("Naruto::456::action", content)
+        self.assertIn("Your Name::50::drama", content)
+
+if __name__ == '__main__':
+    unittest.main()

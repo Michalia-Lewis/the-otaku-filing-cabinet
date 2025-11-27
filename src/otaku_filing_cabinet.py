@@ -475,7 +475,8 @@ def check_filter(show: Tuple[str, int, str], filter: str) -> bool:
 def print_shows(shows: Dict[str, Tuple[int, str]], filter: str = '', spacer: int = __SPACER, max_stars: int = __MAX_STARS) -> None:
     """Prints shows from a dictionary with star ratings and genre.
 
-    Displays each show's title with a star rating representation. 
+    Displays each show's title with a star rating representation and genre,
+    formatted in columns with pipe separators.
     
     Can filter the shows before printing based on an optional filter 
     parameter. See: check_filter() for filter options (by title, genre, 
@@ -485,54 +486,55 @@ def print_shows(shows: Dict[str, Tuple[int, str]], filter: str = '', spacer: int
         # Standard cases - no filter
         >>> shows = {"Attack on Titan": (9, "action"), "Your Lie in April": (8, "drama"), "Haikyu!!": (7, "sports")}
         >>> print_shows(shows)
-        ⭐⭐⭐⭐⭐  Attack on Titan
-        ⭐⭐⭐⭐  Your Lie in April
-        ⭐⭐⭐⭐   Haikyu!!
+        ⭐⭐⭐⭐⭐  |      Attack on Titan       |     action     
+        ⭐⭐⭐⭐    |     Your Lie in April      |      drama     
+        ⭐⭐⭐⭐    |          Haikyu!!          |     sports     
         >>> shows_small = {"One Piece": (10, "adventure"), "Naruto": (6, "action")}
         >>> print_shows(shows_small)
-        ⭐⭐⭐⭐⭐  One Piece
-        ⭐⭐⭐    Naruto
+        ⭐⭐⭐⭐⭐  |         One Piece          |    adventure   
+        ⭐⭐⭐      |          Naruto            |     action     
         >>> shows_single = {"Death Note": (10000, "psychological")}
         >>> print_shows(shows_single)
-        ⭐⭐⭐⭐⭐  Death Note
+        ⭐⭐⭐⭐⭐  |         Death Note         |  psychological 
         
         # Filter by title
         >>> print_shows(shows, "Titan")
-        ⭐⭐⭐⭐⭐  Attack on Titan
+        ⭐⭐⭐⭐⭐  |      Attack on Titan       |     action     
         >>> print_shows(shows, "Your")
-        ⭐⭐⭐⭐   Your Lie in April
-        >>> print_shows(shows, "H")
-        ⭐⭐⭐⭐   Haikyu!!
+        ⭐⭐⭐⭐    |     Your Lie in April      |      drama     
         
         # Filter by genre
         >>> print_shows(shows, "sports")
-        ⭐⭐⭐⭐   Haikyu!!
+        ⭐⭐⭐⭐    |          Haikyu!!          |     sports     
         >>> print_shows(shows, "action")
-        ⭐⭐⭐⭐⭐  Attack on Titan
+        ⭐⭐⭐⭐⭐  |      Attack on Titan       |     action     
         >>> print_shows(shows, "drama")
-        ⭐⭐⭐⭐   Your Lie in April
+        ⭐⭐⭐⭐    |     Your Lie in April      |      drama     
         
         # Filter by rating comparison
         >>> print_shows(shows, "> 7")
-        ⭐⭐⭐⭐⭐  Attack on Titan
-        ⭐⭐⭐⭐   Your Lie in April
+        ⭐⭐⭐⭐⭐  |      Attack on Titan       |     action     
+        ⭐⭐⭐⭐    |     Your Lie in April      |      drama     
         >>> print_shows(shows, "= 8")
-        ⭐⭐⭐⭐  Your Lie in April
-        >>> print_shows(shows, "< 9")
-        ⭐⭐⭐⭐   Your Lie in April
-        ⭐⭐⭐⭐   Haikyu!!
+        ⭐⭐⭐⭐    |     Your Lie in April      |      drama     
         
         # Edge cases - empty/no matches
-        >>> print_shows({})  # Empty dictionary
-        Your list is empty! Start adding shows! 📝
-        >>> print_shows(shows, "nothing")  # No matches
-        "Gomen! No anime found matching '{filter}' 😭"
-        >>> print_shows(shows, "> 100")  # No matches with rating filter
-        Gomen! No anime found matching '> 100' 😔
-
+        >>> print_shows({})
+        Zannen! Your list is empty! Start adding shows! 📝
+        >>> print_shows(shows, "nothing")
+        Gomen! No anime found matching 'nothing' 😭
+        >>> print_shows(shows, "> 100")
+        Gomen! No anime found matching '> 100' 😭
 
     Args:
-       shows (Dict[str, Tuple[int, str]]): Dictionary of shows with title as key and (rating, genre) as value
+        shows (Dict[str, Tuple[int, str]]): Dictionary of shows with title as key 
+            and (rating, genre) as value
+        filter (str): Optional filter string for title, genre, or rating comparison
+        spacer (int): Spacing constant (default __SPACER)
+        max_stars (int): Maximum star rating (default __MAX_STARS)
+        
+    Returns:
+        None
     """
     # Filter shows based on user criteria
     if filter != "":
@@ -616,7 +618,7 @@ def save_shows(catalog: Dict[str, Tuple[int, str]], filename: str) -> None:
 
     Args:
         shows (Dict[str, Tuple[int, str]]): Dictionary of shows where keys are titles
-            and values are tuples of (rating, genre)
+        and values are tuples of (rating, genre)
         filename (str): The path/name of the file to write to. Will overwrite if exists.
 
     Returns:

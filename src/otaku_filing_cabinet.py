@@ -53,7 +53,6 @@ Build your perfect anime list!
 ✨ Let's build your anime collection together! ✨
 """.strip()
 
-
 goodbye_text = """
 SAYONARA! 👋
   

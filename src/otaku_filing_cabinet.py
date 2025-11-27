@@ -74,54 +74,54 @@ __HELP_MESSAGE = """
 Here's how to use the app:
 
 📚 BROWSING ANIME
-  • list catalog     - Browse our legendary anime collection! ⚔️
-  • list mine        - Check out your personal list! 📝
+  • list catalog        - Browse our legendary anime collection! ⚔️
+  • list my list        - Check out your personal list! 📝
   • list catalog action - Find all the Shounen goodness! 💪
-  • list mine > 500    - See your top-tier anime! 🏆
+  • list my list > 500  - See your top-tier anime! 🏆
 
-➕ ADDING SHOWS  
-  • add              - Add a hidden gem we don't know about yet! 💎
-  • add Death Note   - Steal a show from our catalog (we won't tell) 🎭
+➕ ADDING SHOWS
+  • add                 - Add a hidden gem we don't know about yet! 💎
+  • add Death Note      - Grab a show from our catalog! 🎭
 
 ⭐ UPDATING RATINGS
-  • update           - Changed your mind? No judgment here! 👀
-  • update Naruto    - Give Naruto the rating it deserves! 🍥
+  • update              - Changed your mind? No judgment here! 👀
+  • update Naruto       - Give Naruto the rating it deserves! 🍥
 
 💾 SAVING YOUR LIST
-  • save             - Create a backup of your precious collection! 📜
-  • save summer2024  - Save with a custom name (memories included) 🌻
+  • save                - Create a backup of your precious collection! 📜
+  • save summer2024     - Save with a custom name! 🌻
 
 🚪 OTHER
-  • help             - Summon this guide again! 📖
-  • exit             - Ja ne~ (Your list is safe with us! Auto-saves on exit 💖)
+  • help                - Summon this guide again! 📖
+  • exit                - Ja ne~ (Auto-saves on exit!) 💖
 
 📝 FILTER TIPS:
   Become a search ninja with these techniques:
-  
-  🗡️ BY GENRE: 
-     list catalog action     → Find all the epic battles! 💥
-     list mine romance       → Your collection of feels~ 💕
-  
-  🔍 BY TITLE:
-     list catalog Death      → Catches "Death Note", "Death Parade"... 💀
-     list mine Psycho        → Finds "Mob Psycho 100", "Psycho-Pass"! 🧠
-     
-  ⭐ BY RATING:
-     list catalog > 700     → Only the legendary stuff! 🏆
-     list mine < 5          → Your guilty pleasures (we all have them) 🤫
-     list catalog = 1000    → The perfect 1000/1000 masterpieces! ✨
-     
-  🎯 COMBO MOVES:
-     list catalog cyberpunk  → All that neon aesthetic! 🌃
-     list mine >= 900       → Your hall of fame anime! 👑
 
-✨ Pro tip: Just typing 'list' will ask which list you want!
+  🗡️ BY GENRE:
+     list catalog action    - Find all the epic battles! 💥
+     list mine romance      - Your collection of feels~ 💕
+
+  🔍 BY TITLE:
+     list catalog Death     - Catches "Death Note", "Death Parade"... 💀
+     list mine Psycho       - Finds "Mob Psycho 100"! 🧠
+
+  ⭐ BY RATING:
+     list catalog > 700     - Only the legendary stuff! 🏆
+     list mine < 100        - Your guilty pleasures! 🤫
+     list catalog = 1000    - The perfect 1000 masterpieces! ✨
+
+  🎯 MORE EXAMPLES:
+     list catalog cyberpunk - All that neon aesthetic! 🌃
+     list mine >= 900       - Your hall of fame anime! 👑
+
+✨ Pro tip: Typing 'list' will ask which list you want!
 
 =============== Ready to build your anime empire? 🎌 Ganbatte! ===============
 """.strip()
 
 # prompts the user for a command
-__PROMPT = """What would you like to do? """
+__PROMPT = """Please enter a command: """
 
 # COMMAND OPTION RETURNS
 __ADD_COMMAND = "add"
@@ -181,11 +181,11 @@ def load_shows(filename: str) -> Dict[str, Tuple[int, str]]:
         rating_str = clean_key[1].strip()  # extract rating (still a string)
         genre = clean_key[2].strip()  # extract genre
 
-        # checks for proper value for rating (must be an int)
+        # converts and validates rating (must be an int)
         try:
-            rating = int(rating_str)  # convert rating to int
+            rating = int(rating_str)
         except ValueError:
-            print(f"Warning: Skipping '{title}' - rating must be a number (found: '{rating_str}')")  # prints error message if rating is not an int
+            print(f"⚠️ Skipping '{title}' - rating must be a number (found: '{rating_str}')")
             continue
 
         catalog[title] = (rating, genre)  # stores show in dictionary with title as key
@@ -212,34 +212,34 @@ def get_new_show_from_user() -> Tuple[str, int, str]:
     """
     # get the title from the user and call clean_title function
     while True:
-        user_title = (input("What anime are you adding? 🎌: "))
+        user_title = (input("What anime are you adding 🎌:"))
         cleaned_user_title = clean_title(user_title)
 
         if cleaned_user_title != "":
             break
         else:
-            print("Every anime needs a name! Try again! ↩️")  # if user doesn't enter a title re-prompt the user for a valid input
+            print("⚠️ Matte! Every anime needs a name!")  # if user doesn't enter a title re-prompt the user for a valid input
 
     # get the rating from the user
     while True:
-        user_rating = input("How 🔥 is this anime?: ")
+        user_rating = input("How 🔥 is this anime: ")
 
         try:
             int_rating = int(user_rating)  # convert rating to int
             break
         except ValueError:
-            print("Dame! 🛑 Whole numbers only (no 9.5 ratings!)")  # if rating is string or float re-prompt the user for a valid input
+            print("⚠️ Dame! Whole numbers only (no 9.5 ratings!)")  # if rating is string or float re-prompt the user for a valid input
             continue
     
     # get the genre from the user
     while True:
-        user_genre = input("Genre? (action, romance, isekai, etc.) 📚: ")
+        user_genre = input("Genre (action, romance, isekai, etc.) 📚: ")
         cleaned_user_genre = user_genre.lower().strip()
 
         if cleaned_user_genre != "":  # if user doesn't enter a genre re-prompt the user for a valid input
             break
         else:
-            print("Oi! Need a genre! What kind of anime is it? 🤔")
+            print("⚠️ Oi! Need a genre! What kind of anime is it?")
 
     user_catalog = (cleaned_user_title, int_rating, cleaned_user_genre)  # create a tuple containing user's inputs
 
@@ -453,7 +453,7 @@ def check_filter(show: Tuple[str, int, str], filter: str) -> bool:
     try:
         rating = int(parts_of_filter[1])
     except ValueError:
-        print(f"Invalid numeric filter: '{parts_of_filter[1]}'. Please enter a whole number.")
+        print(f"⚠️ Invalid filter - rating must be a number (found: '{parts_of_filter[1]}')")
         return False
 
     if operator == "<":
@@ -546,9 +546,9 @@ def print_shows(shows: Dict[str, Tuple[int, str]], filter: str = '', spacer: int
     # Check if there are any shows to display
     if not filtered_catalog:
         if filter:
-            print(f"Gomen! No anime found matching '{filter}' 😭")
+            print("Gomen! No anime found matching '{filter}' 😭")
         else:
-            print("Your list is empty! Start adding shows! 📝")
+            print("Zannen! Your list is empty! Start adding shows! 📝")
         return
 
     # Extract title, rating, and genre from each dictionary entry
@@ -584,13 +584,13 @@ def update_rating(shows: Dict[str, Tuple[int, str]], title: str) -> bool:
     print(f"Current rating: {current_rating_for_show}")
 
     while True:
-        new_rating = input("Changed your mind? 👀 New rating: ")
+        new_rating = input("New rating 👀: ")
 
         try:
             int_rating = int(new_rating)  # convert rating to int and validate
             break
         except ValueError:
-            print("Whole numbers only! (No 9.5 ratings here!)")
+            print("⚠️ Dame! Whole numbers only (no 9.5 ratings!)")
             continue
 
     shows[title] = (int_rating, genre)
@@ -666,6 +666,7 @@ def menu() -> Tuple[str, str]:
         if command in valid:
             return command, " ".join(rest)
 
+        print("⚠️ Wakaranai! Unknown command. Here's what I can do:\n")
         print(__HELP_MESSAGE)
 
 
@@ -686,7 +687,7 @@ def run() -> None:
         
         if command == __LIST_COMMAND:
             if options == "":
-                which_list = input("Which collection? (catalog = our recs, my list = your picks) 📜: ").lower()
+                which_list = input("Which collection (catalog = our recs, my list = your picks) 📜: ").lower()
                 filter = ""
             else:
                 parts = options.split(maxsplit=1)  # splits at first space
@@ -698,13 +699,13 @@ def run() -> None:
             elif which_list == "catalog":
                 print_shows(catalog, filter)
             else:
-                print("Invalid choice. Please specify 'catalog' or 'my list'")
+                print("⚠️ Gomen! Please specify 'catalog' or 'my list'")
         
         elif command == __ADD_COMMAND:
             if options == "":  # Just "add" - custom show
                 title, rating, genre = get_new_show_from_user()
                 user_catalog[title] = (rating, genre)
-                print(f"Added '{title}' to your list with rating {rating}!")
+                print(f"Added '{title}' to your list with rating {rating}! 🎉")
                 
             else:  # add from catalog
                 title = clean_title(options)
@@ -712,14 +713,14 @@ def run() -> None:
                 if title in catalog:
                     user_catalog[title] = catalog[title]
                     rating, genre = catalog[title]
-                    print(f"Added '{title}' ({genre}, rating: {rating}) from catalog to your list!")
+                    print(f"Added '{title}' ({genre}, rating: {rating}) from catalog! 🎉")
                 else:
-                    print(f"Hmm... '{title}' isn't in our catalog! 🔍")
+                    print(f"⚠️ Gomen! '{title}' isn't in our catalog!")
                     print("Try 'add' alone to add your own anime! ✨")
                 
         elif command == __UPDATE_COMMAND:
             if options == "":
-                title = clean_title(input("Rating update? Which show? ✏️: "))
+                title = clean_title(input("Which show ✏️: "))
             else:
                 title = clean_title(options)
             
@@ -734,14 +735,14 @@ def run() -> None:
                 filename = options
             
             save_shows(user_catalog, filename)
-            print(f"✨ Your list has been saved to 'anime_shows_list/{filename}'!")
+            print(f"Your list has been saved to 'anime_shows_list/{filename}'! 💾")
         
         elif command == __HELP_COMMAND:
             print(__HELP_MESSAGE)
         
     if user_catalog:  # Only save if user has added shows
         save_shows(user_catalog, "auto_save.dat")
-        print("\n✨ Your list has been auto-saved to 'anime_shows_list/auto_save.dat'")
+        print("\nYour list has been auto-saved to 'anime_shows_list/auto_save.dat'! 💾'")
 
     print(__GOODBYE_MESSAGE)
 

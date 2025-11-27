@@ -74,9 +74,9 @@ Here's how to use the app:
 
 📚 BROWSING ANIME
   • list catalog        - Browse our legendary anime collection! ⚔️
-  • list my list        - Check out your personal list! 📝
+  • list mine           - Check out your personal list! 📝
   • list catalog action - Find all the Shounen goodness! 💪
-  • list my list > 500  - See your top-tier anime! 🏆
+  • list mine > 500  - See your top-tier anime! 🏆
 
 ➕ ADDING SHOWS
   • add                 - Add a hidden gem we don't know about yet! 💎
@@ -648,19 +648,19 @@ def run() -> None:
         
         if command == __LIST_COMMAND:
             if options == "":
-                which_list = input("Which collection (catalog = our recs, my list = your picks) 📜: ").lower()
+                which_list = input("Which collection (catalog = our recs, mine = your picks) 📜: ").lower()
                 filter = ""
             else:
                 parts = options.split(maxsplit=1)  # splits at first space
                 which_list = parts[0]
                 filter = parts[1] if len(parts) > 1 else ""
 
-            if which_list in ["mine", "my list", "my"]:
+            if which_list == "mine":
                 print_shows(user_catalog, filter)
             elif which_list == "catalog":
                 print_shows(catalog, filter)
             else:
-                print("⚠️ Gomen! Please specify 'catalog' or 'my list'")
+                print("⚠️ Gomen! Please specify 'catalog' or 'mine'")
         
         elif command == __ADD_COMMAND:
             if options == "":  # Just "add" - custom show
@@ -703,7 +703,7 @@ def run() -> None:
         
     if user_catalog:  # Only save if user has added shows
         save_shows(user_catalog, "auto_save.dat")
-        print("\nYour list has been auto-saved to 'anime_shows_list/auto_save.dat'! 💾'")
+        print("\nYour list has been auto-saved to 'anime_shows_list/auto_save.dat'! 💾")
 
     print(__GOODBYE_MESSAGE)
 

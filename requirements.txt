@@ -1,12 +1,3 @@
-# A requirements file in python is a file that lists all the libraries that your project depends on.
-# it is common to include in a project, so someone can easily install the needed
-# libraries to run your project.  
-# For example
-# pip install -r requirements.txt
-# will install all the libraries listed in the requirements.txt file
-
-# Here are some example libaries that someone may include, one is included on each line
-# numpy
-# pandas
-# flask
-# requests  
+# Requirements for The Otaku Filing Cabinet
+# This project uses only Python's built-in libraries
+# No additional installation needed - just run the program!

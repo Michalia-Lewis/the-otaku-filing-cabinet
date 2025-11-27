@@ -18,36 +18,43 @@ This program allows the user to search through a curated catalog of 50 anime sho
 After running the program, you'll be greeted with a welcome message. Type `help` to see all available commands.
 
 ![Welcome Message](/screenshots/welcome_message.png)
+
 ![Help Message](/screenshots/help_message.png)
 
 A typical session might look like:
 
 1. `list catalog` — browse the anime catalog
+
    ![List Catalog](/screenshots/list_catalog_snippet.png)
 
 2. `list catalog action` — filter by genre
+
     ![List Catalog Action](/screenshots/list_catalog_action.png)
 
 3. `add Death Note` — add a show from the catalog to your list
+
     ![Add Death Note](/screenshots/add_death_note.png)
 
 4. `add` — add your own custom show
+
     ![Add](/screenshots/add.png)
 
 5. `list mine` — view your personal list
+
     ![List Mine](/screenshots/list_mine.png)
 
 6. `update Naruto` — change a rating
+
     ![Update Rating](/screenshots/update_rating.png)
 
 7. `save mylist` — saves your collection in a file titled "mylist"
+
     ![Save mylist](/screenshots/save_mylist.png)
     ![mylist](/screenshots/mylist.png)
 
 8. `exit` — quit (auto-saves!)
-    ![Exit](/screenshots/exit.png)
 
-## Installation Instructions
+    ![Exit](/screenshots/exit.png)
 
 ## Installation Instructions
 

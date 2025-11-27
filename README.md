@@ -47,11 +47,46 @@ A typical session might look like:
 8. `exit` — quit (auto-saves!)
     ![Exit](/screenshots/exit.png)
 
-How do we run your project? What should we do to see it in action? - Note this isn't installing, this is actual use of the project.. If it is a website, you can point towards the gui, use screenshots, etc talking about features.
+## Installation Instructions
 
 ## Installation Instructions
 
-If we wanted to run this project locally, what would we need to do?  If we need to get API key's include that information, and also command line startup commands to execute the project. If you have a lot of dependencies, you can also include a requirements.txt file, but make sure to include that we need to run `pip install -r requirements.txt` or something similar.
+### Prerequisites
+
+* Python 3.x installed on your machine
+
+### Download
+
+1. Download the repository as a ZIP file (Code → Download ZIP)
+2. Extract the ZIP to your desired location
+
+### Running the Program
+
+**Using VS Code (Recommended for beginners):**
+
+1. Open VS Code
+2. File → Open Folder → Select the extracted project folder
+3. Open `src/otaku_filing_cabinet.py`
+4. Click the "Run" button (▶️) in the top right corner
+
+**Using Command Prompt/Terminal (Advanced):**
+
+1. Open Command Prompt (Windows) or Terminal (Mac/Linux)
+2. Navigate to the project's `src` folder:
+
+```
+   cd path/to/CS5001-Final-Project/src
+```
+
+3. Run the program:
+
+```
+   python otaku_filing_cabinet.py
+```
+
+### Dependencies
+
+This project uses only Python's built-in libraries — no additional installation needed!
 
 ## Code Review
 

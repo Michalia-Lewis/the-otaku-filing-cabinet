@@ -103,7 +103,7 @@ The main application code can be found in [`src/otaku_filing_cabinet.py`](src/ot
 
 For The Otaku Filing Cabinet, I wanted to provide a catalog of anime shows that users could search through, and dictionaries were a natural fit because of their key-value structure. Using anime titles as keys and tuples as values (storing rating and genre) was the simplest way to achieve the catalog I envisioned. I chose tuples because they group related data together, and their immutability adds a layer of reliability. When a user updates a rating, the entire tuple is replaced rather than individual elements being modified, ensuring the pairing stays intact.
 
-* Example:
+**Example:**
 
 ```python
 # Dictionary with title as key, tuple of (rating, genre) as value
@@ -118,7 +118,7 @@ catalog = {
 
 In a previous homework assignment, we built a star rating program that allowed users to add movies and ratings through the terminal. At the time, we hadn't learned how to work with files, so I wanted to expand on that foundation. I created a .dat file containing 50 anime titles, each with a rating and genre, and used the [`load_shows()`](src/otaku_filing_cabinet.py) function to read the file and store its contents in a dictionary. I also incorporated a try/except block, both to aid in testing and to provide users with helpful feedback if an error occurred.
 
-* Snippet:
+**Snippet:**
 
 ```python
 user_file = open(filename)
@@ -141,7 +141,7 @@ for line in show_list:
 
 The star rating program included a filter function that I really liked, so I expanded it to not only let users search by title and rating but by genre as well. Sometimes you just want to find a good romance or slice of life anime to watch 😂. I also included a try/except block to catch any non-integer values entered as a rating.
 
-* Snippet:
+**Snippet:**
 
 ```python
 if filter.lower() == show[2].lower():  # filter by genre
@@ -172,6 +172,8 @@ if filter.lower() == show[2].lower():  # filter by genre
 
 For the [`convert_rating()`](src/otaku_filing_cabinet.py) function I took the same function from the stars rating app but decided to create a scale so that the amount of stars would be a better fit for a 1-10 scale since most shows are rated 1-10 in other anime show tracker apps. However, I was still sure to include numbers above 10 (max of 5 stars) and below 1 (minimum of 1 star). This allows the user to enter unique ratings into their catalog but retain a simple display when printed to the terminal. I think being able to rate a show at 1000 or at -284 is a great way for the user to express how they felt about the show. Furthermore, once learning that I could use emojis in my code I opted to update the original star (*) to an emoji star to provide an even more eye-pleasing display.
 
+**Snippet:**
+
 ```python
 if val <= 2:
         star_rating = 1
@@ -190,6 +192,8 @@ if val <= 2:
 ### save_shows()
 
 For our star rating app assignment, I noticed that our professor included a message informing users that their list would not be saved, since we hadn't yet learned how to write files. This was one of the deciding factors for choosing to build The Otaku Filing Cabinet. I wanted users to be able to save their list as a file they could return to later, so I included a function to write files as well. I took my [`save_shows()`](src/otaku_filing_cabinet.py) function a step further by storing a dedicated directory path and writing an if statement to create the directory automatically if it didn't already exist.
+
+**Snippet:**
 
 ```python
 # Set up directory for saved anime lists

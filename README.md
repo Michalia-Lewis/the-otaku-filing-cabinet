@@ -218,11 +218,11 @@ if user_catalog:  # save if user has added shows
         print("\nYour list has been auto-saved to 'anime_shows_list/auto_save.dat'! 💾")
 ```
 
-### Major Challenges
+## Major Challenges
 
 One of my major challenges was formatting. This was the first program I had written that required a lot of user-facing text. I had to learn new ways to format strings as well as write a helper function for creating bordered boxes instead of manually typing them out for each message. This project helped me realize not only how important formatting is but how much fun it can be to provide the user with an aesthetically pleasing program. Being able to use emojis and create an experience instead of plain strings brought me a lot of joy, and I had fun crafting an "otaku" vibe that anime enthusiasts can enjoy.
 
-Another challenge was writing unit tests for The Otaku Filing Cabinet. For example, the [`get_new_show_from_user()`](src/otaku_filing_cabinet.py) and [`update_rating()`](src/otaku_filing_cabinet.py) functions require user input, so I had to research the best ways to test them. To test `get_new_show_from_user` I learned how to use `side_effect` and for `update_rating`,  I used mocking to simulate user input. I also learned about capturing stdout for [`print_shows()`](src/otaku_filing_cabinet.py), which allowed me o verify the function's output.
+Another challenge was writing unit tests for The Otaku Filing Cabinet. For example, the [`get_new_show_from_user()`](src/otaku_filing_cabinet.py) and [`update_rating()`](src/otaku_filing_cabinet.py) functions require user input, so I had to research the best ways to test them. To test `get_new_show_from_user` I learned how to use `side_effect` and for `update_rating`,  I used mocking to simulate user input. I also learned about capturing stdout for [`print_shows()`](src/otaku_filing_cabinet.py), which allowed me to verify the function's output.
 
 ## Example Runs
 
@@ -230,13 +230,32 @@ Explain how you documented running the project, and what we need to look for in 
 
 ## Testing
 
-How did you test your code? What did you do to make sure your code was correct? If you wrote unit tests, you can link to them here. If you did run tests, make sure you document them as text files, and include them in your submission.
+I used a combination of doctests and unit tests to verify my code.
 
-> _Make it easy for us to know you _ran the project_ and _tested the project_ before you submitted this report!_
+### Doctests
+
+Functions like `clean_title()`, `convert_rating()`, and `check_filter()` include doctests within their docstrings for quick validation. To verify they passed, I temporarily commented out `run()` and ran `doctest.testmod(verbose=True)` instead.
+
+**Doctests Results:**
+
+![Doctest Results](/screenshots/doctest_results.png)
+
+### Unit Tests
+
+I wrote 22 unit tests in [`tests/test_otaku_filing_cabinet.py`](tests/test_otaku_filing_cabinet.py) covering:
+
+* File I/O (`load_shows`, `save_shows`)
+* User input (`get_new_show_from_user`, `update_rating`)
+* Filtering and display (`check_filter`, `print_shows`)
+* Utility functions (`box`, `clean_title`, `convert_rating`)
+
+**Unit Test Results:**
+
+![Unit Test Results](/screenshots/unit_test_results.png)
 
 ## Missing Features / What's Next
 
-Focus on what you didn't get to do, and what you would do if you had more time, or things you would implement in the future.
+Originally, I wanted to create a web app using Flask. However, due to my limited time and knowledge, I was unable to do so. This constraint allowed me to focus on strengthening my current skills by practicing recently learned topics. My overall goal for The Otaku Filing Cabinet is to create a website and app that focus more on Human-Computer Interaction (HCI) than information storage. As someone who uses anime show trackers, I've noticed that many fail to provide a smooth and visually pleasing experience alongside their extensive databases and features. One day, I would like to fill that gap, using this project as the foundation.
 
 ## Final Reflection
 

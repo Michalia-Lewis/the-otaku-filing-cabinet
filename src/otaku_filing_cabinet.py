@@ -568,13 +568,6 @@ def save_shows(catalog: Dict[str, Tuple[int, str]], filename: str) -> None:
     This format matches the input format used by load_shows(), allowing
     saved files to be loaded back into the program.
 
-    Example:
-        >>> shows = {"Attack on Titan": (9, "action"), "Your Lie in April": (8, "drama")}
-        >>> save_shows(shows, "my_anime_list.dat")
-        # Creates file with:
-        # Attack on Titan::9::action
-        # Your Lie in April::8::drama
-
     Args:
         shows (Dict[str, Tuple[int, str]]): Dictionary of shows where keys are titles
         and values are tuples of (rating, genre)
@@ -708,4 +701,6 @@ def run() -> None:
     print(__GOODBYE_MESSAGE)
 
 if __name__ == "__main__":
+    # import doctest
+    # doctest.testmod(verbose=True)
     run()

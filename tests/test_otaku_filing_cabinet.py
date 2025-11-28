@@ -131,6 +131,27 @@ class TestOtakuFilingCabinet(unittest.TestCase):
         show_catalog = otaku_filing_cabinet.load_shows("tests/test_data/test_invalid_rating.dat")
         self.assertNotIn("Bad Show", show_catalog)
     
+    def test_get_new_show_from_user(self) -> None:
+        """Test get_new_show_from_user returns correct tuple"""
+        # Mock input() to return values in order: title, rating, genre
+        # side_effect provides a different return value for each input() call
+        with patch('builtins.input', side_effect=['Trigun', '420', 'western']):
+            # Call the function — it uses our fake inputs instead of waiting for user
+            result = otaku_filing_cabinet.get_new_show_from_user()
+        
+        # Check returned tuple matches expected (title, rating as int, genre)
+        self.assertEqual(result, ('Trigun', 420, 'western'))
+
+    def test_get_new_show_from_user_cleans_input(self) -> None:
+        """Test get_new_show_from_user cleans title and genre"""
+        # Mock input() with messy input (extra spaces, caps)
+        with patch('builtins.input', side_effect=['  MADE IN ABYSS  ', '777', '  ADVENTURE  ']):
+            result = otaku_filing_cabinet.get_new_show_from_user()
+
+        # Title should be cleaned (title case, stripped)
+        # Genre should be lowercase and stripped
+        self.assertEqual(result, ('Made In Abyss', 777, 'adventure'))
+    
     def test_clean_title(self) -> None:
         """Test clean_title function"""
         self.assertEqual(otaku_filing_cabinet.clean_title("death note  "), "Death Note")
@@ -196,54 +217,70 @@ class TestOtakuFilingCabinet(unittest.TestCase):
     
     def test_print_shows(self) -> None:
         """Test print_shows function"""
+        # Create a fake "file" in memory to capture printed output
         captured_output = io.StringIO()
+        # Redirect stdout to our fake file
         sys.stdout = captured_output
         
+        # Run the function — its print() goes to captured_output
         otaku_filing_cabinet.print_shows({"Naruto": (456, "action")})
         
+        # Reset stdout back to normal
         sys.stdout = sys.__stdout__
+        # Get what was "printed" as a string
         output = captured_output.getvalue()
         
+        # Check that expected content is in the output
         self.assertIn("Naruto", output)
         self.assertIn("action", output)
         self.assertIn("⭐", output)
 
     def test_print_shows_empty_dict(self) -> None:
         """Test print_shows with empty dictionary"""
+        # Capture stdout
         captured_output = io.StringIO()
         sys.stdout = captured_output
         
         otaku_filing_cabinet.print_shows({})
         
+        # Reset stdout and get output
         sys.stdout = sys.__stdout__
         output = captured_output.getvalue()
 
+        # Should show empty list message
         self.assertIn("Zannen!", output)
-    
+
     def test_print_shows_no_matches(self) -> None:
         """Test print_shows with filter that matches nothing"""
+        # Capture stdout
         captured_output = io.StringIO()
         sys.stdout = captured_output
         
         otaku_filing_cabinet.print_shows(TEST_CATALOG_DICT, "xyz")
         
+        # Reset stdout and get output
         sys.stdout = sys.__stdout__
         output = captured_output.getvalue()
 
+        # Should show no matches message
         self.assertIn("Gomen!", output)
-    
+
     def test_print_shows_filter(self) -> None:
         """Test print_shows with filter"""
+        # Capture stdout
         captured_output = io.StringIO()
         sys.stdout = captured_output
         
         otaku_filing_cabinet.print_shows(TEST_CATALOG_DICT, "death")
         
+        # Reset stdout and get output
         sys.stdout = sys.__stdout__
         output = captured_output.getvalue()
 
+        # Matching shows should appear
         self.assertIn("Death Parade", output)
         self.assertIn("Death Note", output)
+        # Non-matching shows should NOT appear
         self.assertNotIn("Naruto", output)
         self.assertNotIn("Akira", output)
     

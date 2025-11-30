@@ -230,7 +230,7 @@ Another challenge was writing unit tests for The Otaku Filing Cabinet. For examp
 
 ## Example Runs
 
-Explain how you documented running the project, and what we need to look for in your repository (text output from the project, small videos, links to videos on youtube of you running it, etc)
+[The Otaku Filing Cabinet Demonstration](https://youtu.be/3v3gH7VHznE)
 
 ## Testing
 

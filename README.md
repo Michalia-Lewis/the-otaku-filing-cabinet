@@ -216,6 +216,8 @@ For our star rating app assignment, I noticed that our professor included a mess
 
 I wanted to include a feature that auto saves the user's catalog in case they exit before manually saving. It turned out to be simple to implement, and it's something I look forward to reusing in future projects involving file I/O.
 
+**Snippet:**
+
 ```python
 if user_catalog:  # save if user has added shows
         save_shows(user_catalog, "auto_save.dat")
